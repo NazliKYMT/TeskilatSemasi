@@ -1,0 +1,5 @@
+{
+  "name": "Teşkilat Şeması Oluşturucu",
+  "description": "İsim, ünvan ve bağlılık ilişkilerini girerek dinamik olarak organizasyon ve teşkilat şemaları oluşturan bir araç.",
+  "requestFramePermissions": []
+}
