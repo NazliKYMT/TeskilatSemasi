@@ -12,9 +12,11 @@ interface OrgChartProps {
   onAddSecretary: (managerId: string) => void;
   searchResults: string[];
   currentResultId: string | null;
+  onRemoveEntity: (id: string) => void;
+  isRemoveDisabled: boolean;
 }
 
-const OrgChart = React.forwardRef<HTMLDivElement, OrgChartProps>(({ tree, theme, editingNodeId, setEditingNodeId, onUpdateEntity, onAddSecretary, searchResults, currentResultId }, ref) => {
+const OrgChart = React.forwardRef<HTMLDivElement, OrgChartProps>(({ tree, theme, editingNodeId, setEditingNodeId, onUpdateEntity, onAddSecretary, searchResults, currentResultId, onRemoveEntity, isRemoveDisabled }, ref) => {
   return (
     <div ref={ref} className="w-full h-full overflow-auto p-4 flex flex-col items-center flex-grow">
       <h2 className="text-2xl font-semibold text-gray-700 mb-6 export-hidden">Oluşturulan Şema</h2>
@@ -33,6 +35,8 @@ const OrgChart = React.forwardRef<HTMLDivElement, OrgChartProps>(({ tree, theme,
                 isCurrentResult={rootNode.id === currentResultId}
                 searchResults={searchResults}
                 currentResultId={currentResultId}
+                onRemoveEntity={onRemoveEntity}
+                isRemoveDisabled={isRemoveDisabled}
               />
             ))}
         </div>

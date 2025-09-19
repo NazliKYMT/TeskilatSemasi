@@ -4,6 +4,7 @@ import { OrgEntity, TreeNode, ColorTheme, Department, Person } from './types';
 import InputPanel from './components/InputPanel';
 import OrgChart from './components/OrgChart';
 import SearchBar from './components/SearchBar';
+import UserGuide from './components/UserGuide';
 
 declare const htmlToImage: any;
 
@@ -15,16 +16,26 @@ const devLeadId = 'd9e0f1a2-b3c4-4d5e-8f6a-7b8c9d0e1f2a';
 const seniorDevId = 'e3f4a5b6-c7d8-4e9f-8a0b-1c2d3e4f5a6b';
 const digitalMarketingId = 'f7a8b9c0-d1e2-4f3a-8b4c-5d6e7f8a9b0c';
 const softwareUnitId = 'a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6';
+const marketingUnitId = 'g8h9i0j1-k2l3-m4n5-o6p7-q8r9s0t1u2v3';
+const socialMediaId = 'a4b5c6d7-e8f9-a0b1-c2d3-e4f5a6b7c8d9';
 
 const initialOrgData: OrgEntity[] = [
+  // CEO
   { id: ceoId, name: 'Ayşe Yılmaz', title: 'Genel Müdür', reportsTo: null, type: 'person' },
-  { id: marketingDirectorId, name: 'Fatma Kaya', title: 'Pazarlama Direktörü', reportsTo: ceoId, type: 'person' },
+  
+  // Pazarlama Departmanı ve çalışanları
+  { id: marketingUnitId, name: 'Pazarlama Birimi', reportsTo: ceoId, type: 'department' },
+  { id: marketingDirectorId, name: 'Fatma Kaya', title: 'Pazarlama Direktörü', reportsTo: marketingUnitId, type: 'person' },
   { id: digitalMarketingId, name: 'Hasan Çelik', title: 'Dijital Pazarlama Uzmanı', reportsTo: marketingDirectorId, type: 'person' },
+  { id: socialMediaId, name: 'Elif Demir', title: 'Sosyal Medya Uzmanı', reportsTo: marketingDirectorId, type: 'person' },
+  
+  // Yazılım Departmanı ve çalışanları
   { id: softwareUnitId, name: 'Yazılım Birimi', reportsTo: ceoId, type: 'department' },
   { id: techDirectorId, name: 'Mehmet Öztürk', title: 'Teknoloji Direktörü', reportsTo: softwareUnitId, type: 'person' },
   { id: devLeadId, name: 'Ali Vural', title: 'Yazılım Geliştirme Lideri', reportsTo: softwareUnitId, type: 'person' },
   { id: seniorDevId, name: 'Zeynep Şahin', title: 'Kıdemli Yazılım Müh.', reportsTo: devLeadId, type: 'person' },
 ];
+
 
 const themes: ColorTheme[] = [
   {
@@ -95,6 +106,7 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchResults, setSearchResults] = useState<string[]>([]);
   const [currentResultIndex, setCurrentResultIndex] = useState<number>(-1);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
@@ -282,7 +294,18 @@ const App: React.FC = () => {
               Teşkilat Şeması Oluşturma Sistemi
             </p>
           </div>
-          <img src={logoBidb} alt="Bilgi İşlem Daire Başkanlığı Logosu" className="h-16 w-16 md:h-20 md:w-20" />
+          <div className="flex items-center gap-4">
+            <img src={logoBidb} alt="Bilgi İşlem Daire Başkanlığı Logosu" className="h-16 w-16 md:h-20 md:w-20" />
+            <button
+              onClick={() => setIsGuideOpen(true)}
+              className="text-gray-500 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 rounded-full p-2 transition-colors"
+              title="Kullanım Kılavuzu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
       
@@ -340,6 +363,8 @@ const App: React.FC = () => {
             onAddSecretary={handleAddSecretary}
             searchResults={searchResults}
             currentResultId={currentResultId}
+            onRemoveEntity={handleRemoveEntity}
+            isRemoveDisabled={orgData.length <= 1}
           />
         </div>
       </main>
@@ -347,6 +372,8 @@ const App: React.FC = () => {
       <footer className="text-center p-4 text-gray-500 text-sm">
         <p>Gemini API ile oluşturulmuştur.</p>
       </footer>
+      
+      <UserGuide isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
     </div>
   );
 };
